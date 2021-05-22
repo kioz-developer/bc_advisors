@@ -14,8 +14,7 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(myMap);
 
 // Load in geojson data
-//var geoData = "static/data/bj_simplifly.geojson";
-var geoData = "http://127.0.0.1:5000/features/014";
+var geoData = "features/014";
 var geojson;
 
 // // Grab data with d3
@@ -40,7 +39,7 @@ d3.json(geoData).then(function(data) {
     onEachFeature: function(feature, layer) {
       let myString = feature.properties.colonia_predio.trim().toLowerCase().replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
       layer.bindPopup(`Neighborhood: ${myString} <br>
-                      Growth: ${Math.round(feature.properties.growth * 100) / 100} <br>
+                      Growth: ${Math.round(feature.properties.growth * 100) / 100}% <br>
                       Banks: ${feature.properties.Banks} <br>
                       Health Services: ${feature.properties.Consultories} <br>
                       Schools: ${feature.properties.Schools} <br>
@@ -62,10 +61,6 @@ info.onAdd = function (map) {
 };
 
 // method that we will use to update the control based on feature properties passed
-info.update = function (props) {
-  this._div.innerHTML = '<h4>Benito Juarez Growth</h4>';
-};
-info.addTo(myMap);
 
 let legend = L.control({position: 'bottomright'});
 
@@ -73,12 +68,12 @@ legend.onAdd = function (map) {
 
   let div = L.DomUtil.create('div', 'info legend');
       div.innerHTML +=
-      '<i style="background:' + "#253494" + '"></i> ' + "55 to 120" + "<br>" +
-      '<i style="background:' + "#2c7fb8" + '"></i> ' + "23 to 55" + "<br>" +
-      '<i style="background:' + "#41b6c4" + '"></i> ' + "8 to 23" + "<br>" +
-      '<i style="background:' + "#7fcdbb" + '"></i> ' + "-7 to -8" + "<br>" +
-      '<i style="background:' + "#c7e9b4" + '"></i> ' + "-23 to -7" + "<br>" +
-      '<i style="background:' + "#ffffcc" + '"></i> ' + "-64 to -23"
+      '<i style="background:' + "#253494" + '"></i> ' + "55% to 120%" + "<br>" +
+      '<i style="background:' + "#2c7fb8" + '"></i> ' + "23% to 55%" + "<br>" +
+      '<i style="background:' + "#41b6c4" + '"></i> ' + "8% to 23%" + "<br>" +
+      '<i style="background:' + "#7fcdbb" + '"></i> ' + "-7% to -8%" + "<br>" +
+      '<i style="background:' + "#c7e9b4" + '"></i> ' + "-23% to -7%" + "<br>" +
+      '<i style="background:' + "#ffffcc" + '"></i> ' + "-64% to -23%"
       
   return div;
 };
