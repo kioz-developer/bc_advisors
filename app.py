@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect
 from flask_pymongo import PyMongo
+import requests
 import json
 import os
 
@@ -12,6 +13,13 @@ mongo = PyMongo(app)
 @app.route("/")
 def index():
     return render_template("index.html", listings=[])
+
+# Used it to discover our heroky deployment IP
+@app.route("/show_ip")
+def show_ip():
+    remote_url = os.environ.get('SHOW_IP_URL', '')
+    response = requests.get(remote_url)
+    return f"{response.text}"
 
 @app.route("/map")
 def map():
