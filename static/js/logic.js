@@ -24,7 +24,7 @@ d3.json(geoData).then(function(data) {
     // Define what  property in the features to use
     valueProperty: "growth",
     // Set color scale
-    scale: ["#ffffcc","#c7e9b4", "#7fcdbb", "#41b6c4", "#2c7fb8", "#253494"],
+    scale: ["#bd0026","#bd0026", "#de2d26", "#c7e9c0", "#31a354", "#006d2c"],
     // Number of breaks in step range
     steps: 6,
     // q for quartile, e for equidistant, k for k-means
@@ -68,12 +68,12 @@ legend.onAdd = function (map) {
 
   let div = L.DomUtil.create('div', 'info legend');
       div.innerHTML +=
-      '<i style="background:' + "#253494" + '"></i> ' + "55% to 120%" + "<br>" +
-      '<i style="background:' + "#2c7fb8" + '"></i> ' + "23% to 55%" + "<br>" +
-      '<i style="background:' + "#41b6c4" + '"></i> ' + "8% to 23%" + "<br>" +
-      '<i style="background:' + "#7fcdbb" + '"></i> ' + "-7% to -8%" + "<br>" +
-      '<i style="background:' + "#c7e9b4" + '"></i> ' + "-23% to -7%" + "<br>" +
-      '<i style="background:' + "#ffffcc" + '"></i> ' + "-64% to -23%"
+      '<i style="background:' + "#006d2c" + '"></i> ' + "55% to 120%" + "<br>" +
+      '<i style="background:' + "#31a354" + '"></i> ' + "23% to 55%" + "<br>" +
+      '<i style="background:' + "#c7e9c0" + '"></i> ' + "8% to 23%" + "<br>" +
+      '<i style="background:' + "#de2d26" + '"></i> ' + "-7% to -8%" + "<br>" +
+      '<i style="background:' + "#bd0026" + '"></i> ' + "-23% to -7%" + "<br>" +
+      '<i style="background:' + "#bd0026" + '"></i> ' + "-64% to -23%"
       
   return div;
 };

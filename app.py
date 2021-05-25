@@ -7,12 +7,18 @@ import os
 app = Flask(__name__)
 
 # Use flask_pymongo to set up mongo connection
-app.config["MONGO_URI"] = os.environ.get('MONGO_URI', '')
+#app.config["MONGO_URI"] = os.environ.get('MONGO_URI', '')
+app.config["MONGO_URI"] = "mongodb://localhost:27017/test"
 mongo = PyMongo(app)
 
 @app.route("/")
+@app.route("/index.html")
 def index():
     return render_template("index.html", listings=[])
+
+@app.route("/products.html")
+def products():
+    return render_template("products.html", listings=[])
 
 # Used it to discover our heroky deployment IP
 @app.route("/show_ip")
