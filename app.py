@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect
+from flask_cors import cross_origin
 from flask_pymongo import PyMongo
 import requests
 import json
@@ -44,6 +45,7 @@ def etl(mun):
     return {"message": "Successful executed"}
 
 @app.route("/features/<mun>")
+@cross_origin()
 def features(mun):
     rows = mongo.db.features.find({"properties.CVE_MUN": f'{mun}'})
 
