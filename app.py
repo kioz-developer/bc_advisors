@@ -44,6 +44,48 @@ def etl(mun):
     
     return {"message": "Successful executed"}
 
+@app.route("/features_by_country/<contry_code>")
+def features_by_country(contry_code):
+    rows = mongo.db.features_country.find({"code": f'{contry_code}'})
+
+    features = []
+    latitude = rows[0]['latitude']
+    longitude = rows[0]['longitude']
+    name = rows[0]['name']
+    for row in rows:
+        del row['_id']
+        features.append(row['geojson_features'])
+
+    return {
+        "type": "FeatureCollection",
+        "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+        "features": features,
+        "latitude": latitude,
+        "longitude": longitude,
+        "name": name
+    }
+
+@app.route("/features_by_area/<area_code>")
+def features_by_area(area_code):
+    rows = mongo.db.areas.find({"code": f'{area_code}'})
+
+    features = []
+    latitude = rows[0]['latitude']
+    longitude = rows[0]['longitude']
+    name = rows[0]['name']
+    for row in rows:
+        del row['_id']
+        features.append(row['geojson_features'])
+
+    return {
+        "type": "FeatureCollection",
+        "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+        "features": features,
+        "latitude": latitude,
+        "longitude": longitude,
+        "name": name
+    }
+
 @app.route("/features/<mun>")
 @cross_origin()
 def features(mun):
