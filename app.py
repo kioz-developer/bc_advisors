@@ -45,6 +45,7 @@ def etl(mun):
     return {"message": "Successful executed"}
 
 @app.route("/features_by_country/<contry_code>")
+@cross_origin()
 def features_by_country(contry_code):
     rows = mongo.db.features_country.find({"code": f'{contry_code}'})
 
@@ -66,6 +67,7 @@ def features_by_country(contry_code):
     }
 
 @app.route("/features_by_area/<area_code>")
+@cross_origin()
 def features_by_area(area_code):
     rows = mongo.db.areas.find({"code": f'{area_code}'})
 
