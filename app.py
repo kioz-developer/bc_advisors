@@ -43,39 +43,51 @@ def etl(mun):
     
     return {"message": "Successful executed"}
 
-@app.route("/features_by_country/<contry_code>")
-def features_by_country(contry_code):
-    rows = mongo.db.features_country.find({"code": f'{contry_code}'})
+@app.route("/config_by_country/<contry_code>")
+def config_by_country(contry_code):
+    row = mongo.db.config_country.find_one({"code": f'{contry_code}'})
+    del row['_id']
 
-    features = rows[0]['geojson_features']
-    latitude = rows[0]['latitude']
-    longitude = rows[0]['longitude']
-    name = rows[0]['name']
+    return row
+
+@app.route("/features_by_country/")
+def features_by_country():
+    rows = mongo.db.areas.find({})
+
+    features = []
+    for row in rows:
+        del row['_id']
+        features.append(row)
+
+    #features = rows[0]['geojson_features']
+    #latitude = rows[0]['latitude']
+    #longitude = rows[0]['longitude']
+    #name = rows[0]['name']
 
     return {
         "type": "FeatureCollection",
         "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-        "features": features,
-        "latitude": latitude,
-        "longitude": longitude,
-        "name": name
+        "features": features
     }
 
 @app.route("/features_by_area/<area_code>")
 def features_by_area(area_code):
-    rows = mongo.db.areas.find({"code": f'{area_code}'})
+    print(f'{area_code}:{type(area_code)}')
+    row = mongo.db.areas.find_one({"code": int(area_code)})
 
-    features = rows[0]['geojson_features']
-    latitude = rows[0]['latitude']
-    longitude = rows[0]['longitude']
-    name = rows[0]['name']
-
+    code = row['code']
+    name = row['name']  
+    features = row['geojson_features']
+    latitude = row['latitude']
+    longitude = row['longitude']
+    
     return {
         "type": "FeatureCollection",
         "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
         "features": features,
         "latitude": latitude,
         "longitude": longitude,
+        "code": code,
         "name": name
     }
 
