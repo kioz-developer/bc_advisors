@@ -49,13 +49,10 @@ def etl(mun):
 def features_by_country(contry_code):
     rows = mongo.db.features_country.find({"code": f'{contry_code}'})
 
-    features = []
+    features = rows[0]['geojson_features']
     latitude = rows[0]['latitude']
     longitude = rows[0]['longitude']
     name = rows[0]['name']
-    for row in rows:
-        del row['_id']
-        features.append(row['geojson_features'])
 
     return {
         "type": "FeatureCollection",
@@ -71,13 +68,10 @@ def features_by_country(contry_code):
 def features_by_area(area_code):
     rows = mongo.db.areas.find({"code": f'{area_code}'})
 
-    features = []
+    features = rows[0]['geojson_features']
     latitude = rows[0]['latitude']
     longitude = rows[0]['longitude']
     name = rows[0]['name']
-    for row in rows:
-        del row['_id']
-        features.append(row['geojson_features'])
 
     return {
         "type": "FeatureCollection",
