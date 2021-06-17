@@ -57,7 +57,7 @@ def features_by_country():
     features = []
     for row in rows:
         del row['_id']
-        features.append(row['geojson_features'])
+        features = features + row['geojson_features']
 
     #features = rows[0]['geojson_features']
     #latitude = rows[0]['latitude']
