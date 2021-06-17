@@ -53,6 +53,7 @@ def config_by_country(contry_code):
     return row
 
 @app.route("/features_by_country/")
+@cross_origin()
 def features_by_country():
     rows = mongo.db.areas.find({})
 
