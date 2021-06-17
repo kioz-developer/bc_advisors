@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect
+from flask_cors import cross_origin
 from flask_pymongo import PyMongo
 import requests
 import json
@@ -44,6 +45,7 @@ def etl(mun):
     return {"message": "Successful executed"}
 
 @app.route("/config_by_country/<contry_code>")
+@cross_origin()
 def config_by_country(contry_code):
     row = mongo.db.config_country.find_one({"code": f'{contry_code}'})
     del row['_id']
@@ -71,6 +73,7 @@ def features_by_country():
     }
 
 @app.route("/features_by_area/<area_code>")
+@cross_origin()
 def features_by_area(area_code):
     print(f'{area_code}:{type(area_code)}')
     row = mongo.db.areas.find_one({"code": int(area_code)})
@@ -92,6 +95,7 @@ def features_by_area(area_code):
     }
 
 @app.route("/features/<mun>")
+@cross_origin()
 def features(mun):
     rows = mongo.db.features.find({"properties.CVE_MUN": f'{mun}'})
 
