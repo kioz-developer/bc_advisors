@@ -52,6 +52,13 @@ def config_by_country(contry_code):
 
     return row
 
+@app.route("/catalogs_by_country/<contry_code>")
+def catalogs_by_country(contry_code):
+    row = mongo.db.catalogs.find_one({"code": f'{contry_code}'})
+    del row['_id']
+
+    return row
+
 @app.route("/features_by_country/")
 @cross_origin()
 def features_by_country():
