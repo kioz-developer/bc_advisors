@@ -93,12 +93,13 @@ def features_by_country():
 def features_by_area(area_code):
     print(f'{area_code}:{type(area_code)}')
     row = mongo.db.areas.find_one({"code": int(area_code)})
-
+    
     code = row['code']
     name = row['name']  
     features = row['geojson_features']
     latitude = row['latitude']
     longitude = row['longitude']
+    growth = row['growth']
     
     return {
         "type": "FeatureCollection",
@@ -107,7 +108,8 @@ def features_by_area(area_code):
         "latitude": latitude,
         "longitude": longitude,
         "code": code,
-        "name": name
+        "name": name,
+        "growth": growth
     }
 
 @app.route("/features/<mun>")
