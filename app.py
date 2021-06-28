@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect
 from flask_cors import cross_origin
 from flask_pymongo import PyMongo
+from flask import jsonify
 import requests
 import json
 import os
@@ -20,7 +21,19 @@ def index():
 def products():
     return render_template("products.html", listings=[])
 
-# Used it to discover our heroky deployment IP
+@app.route("/level1.html")
+def level1():
+    return render_template("level1.html", listings=[])
+
+@app.route("/level2.html")
+def level2():
+    return render_template("level2.html", listings=[])
+
+@app.route("/level3.html")
+def level3():
+    return render_template("level3.html", listings=[])
+
+# # Used it to discover our heroky deployment IP
 @app.route("/show_ip")
 def show_ip():
     remote_url = os.environ.get('SHOW_IP_URL', '')
@@ -86,12 +99,13 @@ def features_by_country():
 def features_by_area(area_code):
     print(f'{area_code}:{type(area_code)}')
     row = mongo.db.areas.find_one({"code": int(area_code)})
-
+    
     code = row['code']
     name = row['name']  
     features = row['geojson_features']
     latitude = row['latitude']
     longitude = row['longitude']
+    growth = row['growth']
     
     return {
         "type": "FeatureCollection",
@@ -100,7 +114,8 @@ def features_by_area(area_code):
         "latitude": latitude,
         "longitude": longitude,
         "code": code,
-        "name": name
+        "name": name,
+        "growth": growth
     }
 
 @app.route("/features_by_mun/<ent_code>/<mun_code>")
@@ -143,6 +158,24 @@ def features_by_mun(ent_code, mun_code):
         "code": code,
         "name": name
     }
+
+@app.route("/houses_by_mun/<ent_code>/<mun_code>")
+def houses_by_mun(ent_code, mun_code):
+    print(f'{ent_code}:{type(ent_code)}')
+    print(f'{mun_code}:{type(mun_code)}')
+    rows = mongo.db.houses.find({
+        "CVE_ENT": ent_code,
+        "CVE_MUN": mun_code
+    })
+
+    print(rows)
+
+    houses = []
+    for row in rows:
+        del row['_id']
+        houses.append(row)
+
+    return jsonify(houses)
 
 @app.route("/features/<mun>")
 @cross_origin()
