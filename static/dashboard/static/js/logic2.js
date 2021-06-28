@@ -10,8 +10,6 @@ let geojson;
 // // Grab data with d3
 d3.json(geoData).then(function(data) {
 
-  console.log(data);
-
   let lat = data.latitude;
   let long = data.longitude;
 
@@ -30,14 +28,27 @@ d3.json(geoData).then(function(data) {
   accessToken: API_KEY
   }).addTo(myMap);
 
+  let scale = ["#bd0026","#bd0026", "#de2d26", "#c7e9c0", "#31a354", "#006d2c"];
+  let current_val = 0;
+
+  data.features.forEach(row => {
+    if (current_val < row.properties.growth) {
+      current_val = row.properties.growth;
+    }
+  });
+  
+  if (current_val <= 0) {
+    scale = ["#bd0026","#bd0026", "#bd0026", "#bd0026", "#bd0026", "#bd0026"];
+  };
+
   // Create a new choropleth layer
   geojson = L.choropleth(data, {
     // Define what  property in the features to use
-    valueProperty: "COLOR",
+    valueProperty: "GROWTH",
     // Set color scale
-    scale: ["#006d2c", "#006d2c"],
+    scale: ["#94001e","#bd0026", "#de2d26", "#c7e9c0", "#31a354", "#006d2c"],
     // Number of breaks in step range
-    steps: 2,
+    steps: 6,
     // q for quartile, e for equidistant, k for k-means
     mode: "q",
     style: {
@@ -63,7 +74,7 @@ d3.json(geoData).then(function(data) {
           window.location.href = "level3.html?CVE_ENT=" + feature.properties.CVE_ENT + "&CVE_MUN=" + feature.properties.CVE_MUN;
           });
 
-      layer.bindPopup(`${feature.properties.NOM_MUN}`)
+      layer.bindPopup(`${feature.properties.NOM_MUN}<br>Growth: ${Math.round(feature.properties.GROWTH * 100) / 100}%`)
         .on('mouseover', function() {
         this.openPopup();})
         .on('mouseout', function() {
@@ -72,42 +83,25 @@ d3.json(geoData).then(function(data) {
           window.location.href = "level3.html?CVE_ENT=" + feature.properties.CVE_ENT + "&CVE_MUN=" + feature.properties.CVE_MUN;
       });
     }
-  }).addTo(myMap);
+    }).addTo(myMap);
 
     // top 3
 
-    let Data = data.features;
-    let borough = [];
-    let boroughsGrowth = [];
-  
-    Data.forEach(feat => {
-      if (borough !== feat.properties.CVE_MUN) {
-        // by growth
-        let object = {
-        borough: feat.properties.NOM_MUN,
-        growth: feat.properties.AREA,
-        CVE_MUN: feat.properties.CVE_MUN,
-        CVE_ENT: feat.properties.CVE_ENT
-        };
-      boroughsGrowth.push(object);
-      };
-      borough = feat.properties.NOM_MUN;
-    });
+    let Data = data.features;    
+    let sortedByGrowth = Data.sort((a, b) => b.properties.GROWTH - a.properties.GROWTH);
+    let top3 = sortedByGrowth.slice(0, 3);
 
-  let sortedByGrowth = boroughsGrowth.sort((a, b) => b.growth - a.growth);
-  let top3 = sortedByGrowth.slice(0, 3);
-
-  d3.select("tbody")
-    .selectAll("tr")
-    .data(top3)
-    .enter()
-    .append("tr")
-    .html(function(d) {
-      return `<td>${d.borough}</td><td>${d.growth}</td>`;
-    })
-    .on('click', function(d) {
-      window.location.href = "level3.html?CVE_ENT=" + `${d.CVE_ENT}` + "&CVE_MUN=" + `${d.CVE_MUN}`;
-    });
+    d3.select("tbody")
+      .selectAll("tr")
+      .data(top3)
+      .enter()
+      .append("tr")
+      .html(function(d) {
+        return `<td class="cursor_hand">${d.properties.NOM_MUN}</td><td>${Math.round(d.properties.GROWTH * 100) / 100}% </td>`;
+      })
+      .on('click', function(d) {
+        window.location.href = "level3.html?CVE_ENT=" + `${d.properties.CVE_ENT}` + "&CVE_MUN=" + `${d.properties.CVE_MUN}`;
+      });
     
     // appending according to area
   

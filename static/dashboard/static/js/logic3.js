@@ -27,13 +27,28 @@ d3.json(geoData).then(function(data) {
   id: "mapbox/streets-v11",
   accessToken: API_KEY
   }).addTo(myMap);
+
+  let scale = ["#bd0026","#bd0026", "#de2d26", "#c7e9c0", "#31a354", "#006d2c"];
+  let current_val = 0;
+
+  data.features.forEach(row => {
+    if (current_val < row.properties.growth) {
+      current_val = row.properties.growth;
+    }
+  });
+  
+  if (current_val <= 0) {
+    scale = ["#bd0026","#bd0026", "#bd0026", "#bd0026", "#bd0026", "#bd0026"];
+  };
+  
+  // ["#94001e","#bd0026", "#de2d26", "#c7e9c0", "#31a354", "#006d2c"]
   
   // Create a new choropleth layer
   geojson = L.choropleth(data, {
     // Define what  property in the features to use
     valueProperty: "growth",
     // Set color scale
-    scale: ["#bd0026","#bd0026", "#de2d26", "#c7e9c0", "#31a354", "#006d2c"],
+    scale: scale,
     // Number of breaks in step range
     steps: 6,
     // q for quartile, e for equidistant, k for k-means
@@ -51,14 +66,6 @@ d3.json(geoData).then(function(data) {
       // let myString = feature.properties.CVE_AGEB.trim().toLowerCase().replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
 
       layer.bindPopup(`Growth: ${Math.round(feature.properties.growth * 100) / 100}% <br>`);
-                      // Neighborhood: ${myString} <br>
-                      // Growth: ${Math.round(feature.properties.growth * 100) / 100}% <br>
-                      // Banks: ${feature.properties.Banks} <br>
-                      // Health Services: ${feature.properties.Consultories} <br>
-                      // Schools: ${feature.properties.Schools} <br>
-                      // Restaurants: ${feature.properties.Restaurants} <br>
-                      // Transport: ${feature.properties.Transport} <br>
-                      // Markets: ${feature.properties.Markets}`);
     }
     
   }).addTo(myMap);
@@ -116,7 +123,8 @@ d3.json(geoData).then(function(data) {
   
   d3.select("#mainTitle")
     .append("text")
-    .text(`${data.name}`);
+    .text(`${data.name}`); 
+
 
   // barchart
   
@@ -211,39 +219,33 @@ d3.json(geoData).then(function(data) {
 
   // Houses For Sale Markers
 
-  // d3.csv("static/data/BJCoords.csv").then(function(data) {
+  d3.json("https://flask-bj-forecasting.herokuapp.com/houses_by_mun/" + CVE_ENT + "/" + CVE_MUN).then(function(data) {
 
-  //   let rows = [];
+    let markers = [];
 
-  //   data.forEach(row => {
-  //     rows.push(row);
-  //   });
+    // Number formatter.
+    let formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'MXN',
+    });
 
-  //   let markers = [];
-
-  //   // Number formatter.
-  //   let formatter = new Intl.NumberFormat('en-US', {
-  //   style: 'currency',
-  //   currency: 'MXN',
-  //   });
-
-  //   rows.forEach(row => {
-  //     markers.push(L.marker([row.lat, row.long]).bindPopup(`${row.adress} <br>
-  //                                                           Price: ${formatter.format(row.price)} <br>
-  //                                                           m2: ${row.m2} <br>
-  //                                                           Rooms: ${row.rooms}`));
-  //   });
+    data.forEach(row => {
+      markers.push(L.marker([row.lat, row.lng]).bindPopup(`
+        ${row.adress} <br>
+        Price: ${formatter.format(row.price)} <br>
+        m2: ${row.m2} <br>
+        <strong><a href="${row.url}" target="_blank">Go to page</a></strong>
+      `));
+    });
     
-  //   let forSale = L.layerGroup(markers);
+    let forSale = L.layerGroup(markers);
 
-  //   let overlayMaps = {
-  //     "Houses For Sale": forSale
-  //     };
+    let overlayMaps = {
+      "Houses For Sale": forSale
+      };
 
-  //   L.control.layers(null, overlayMaps).addTo(myMap);
+    L.control.layers(null, overlayMaps).addTo(myMap);
 
-  // });
+  });
 
 });
-
-
