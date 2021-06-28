@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect
 from flask_pymongo import PyMongo
+from flask import jsonify
 import requests
 import json
 import os
@@ -111,6 +112,64 @@ def features_by_area(area_code):
         "name": name,
         "growth": growth
     }
+
+@app.route("/features_by_mun/<ent_code>/<mun_code>")
+def features_by_mun(ent_code, mun_code):
+    print(f'{ent_code}:{type(ent_code)}')
+    print(f'{mun_code}:{type(mun_code)}')
+    rows = mongo.db.geometries.find({
+        "properties.CVE_ENT": int(ent_code),
+        "properties.CVE_MUN": int(mun_code)
+    })
+
+    features = []
+    for row in rows:
+        del row['_id']
+        features.append(row)
+
+    catalog = mongo.db.catalogs.find_one({"code": "MX"})
+
+    code = mun_code
+    name = ''
+    latitude = 0
+    longitude = 0
+    for area in catalog['areas']:
+        if not name:
+            for municipality in area['municipalities']:
+                if (municipality['CVE_ENT'] == f"{ent_code}") & \
+                    (municipality['CVE_MUN'] == f"{mun_code}".zfill(3)):
+                    name = municipality['NOM_MUN']
+                    latitude = municipality['latitude']
+                    longitude = municipality['longitude']
+                    break
+    
+    return {
+        "type": "FeatureCollection",
+        "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+        "features": features,
+        "latitude": latitude,
+        "longitude": longitude,
+        "code": code,
+        "name": name
+    }
+
+@app.route("/houses_by_mun/<ent_code>/<mun_code>")
+def houses_by_mun(ent_code, mun_code):
+    print(f'{ent_code}:{type(ent_code)}')
+    print(f'{mun_code}:{type(mun_code)}')
+    rows = mongo.db.houses.find({
+        "CVE_ENT": ent_code,
+        "CVE_MUN": mun_code
+    })
+
+    print(rows)
+
+    houses = []
+    for row in rows:
+        del row['_id']
+        houses.append(row)
+
+    return jsonify(houses)
 
 @app.route("/features/<mun>")
 def features(mun):
