@@ -53,19 +53,35 @@ d3.json(geoData).then(function(data) {
 
   }).addTo(myMap);
 
-  let valleyGrowth = 0;
-  let monterreyGrowth = 0;
-  let guadalajaraGrowth = 0;
+  let Data = data.features;
+  let valleyGrowths = [];
+  let monterreyGrowths = [];
+  let guadalajaraGrowths = [];
+  
+    Data.forEach(feature => {
+      if (feature.properties.ZM == "Valley of Mexico Metropolitan Area") {
+        valleyGrowths.push(feature.properties.GROWTH);
+      }else if (feature.properties.ZM == "Monterrey Metropolitan Area") {
+        monterreyGrowths.push(feature.properties.GROWTH);
+      }else if (feature.properties.ZM == "Guadalajara Metropolitan Area") {
+        guadalajaraGrowths.push(feature.properties.GROWTH);
+      }
+    });
+    
+  let valleyMean = d3.mean(valleyGrowths);
+  let monterreyMean = d3.mean(monterreyGrowths);
+  let guadalajaraMean = d3.mean(guadalajaraGrowths);
+  
 
   d3.select("#valleyGrowth")
     .append("text")
-    .text(`${valleyGrowth}`);
+    .text(`${Math.round(valleyMean * 100) / 100}%`);
   d3.select("#monterreyGrowth")
     .append("text")
-    .text(`${monterreyGrowth}`);
+    .text(`${Math.round(monterreyMean * 100) / 100}%`);
   d3.select("#guadalajaraGrowth")
     .append("text")
-    .text(`${guadalajaraGrowth}`);
+    .text(`${Math.round(guadalajaraMean * 100) / 100}%`);
   
 });
 

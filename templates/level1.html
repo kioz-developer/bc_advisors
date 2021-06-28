@@ -35,6 +35,15 @@
   <!-- Style for leaflet map -->
   <link href="static/dashboard/static/css/styles.css" rel="stylesheet" />
 
+  <style>
+    .nav-link.active {
+      cursor: pointer;
+    }
+    .cursor_hand {
+      cursor: pointer;
+    }
+  </style>
+
   <!-- plotly barchart -->
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   
@@ -185,7 +194,7 @@
           <!-- /.Left col -->
           <section class="col-lg-5 connectedSortable">
             <div class="card bg-info">
-              <div class="card-header" data-toggle="tooltip" data-placement="left" title="The Metropolitan Areas and their Growth.">
+              <div class="card-header" data-toggle="tooltip" data-placement="left" title="Results given with the available data.">
                 <h3 class="card-title">
                   <i class="fas fa-chart-area mr-1"></i>
                   Info.
@@ -204,24 +213,20 @@
                 <table class="table table-striped table-hover">
                   <thead>
                     <tr>
-                      <th scope="col"></th>
-                      <th scope="col">Metro Area</th>
+                      <th scope="col">Metropolitan Area</th>
                       <th scope="col">Growth</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody class="cursor_hand">
                     <tr class='clickable-row' data-href='level2.html?CVE_AREA=13'>
-                      <th scope="row">1</th>
                       <td>Valley of Mexico</td>
                       <td id="valleyGrowth"></td>
                     </tr>
                     <tr class='clickable-row' data-href='level2.html?CVE_AREA=31'>
-                      <th scope="row">2</th>
                       <td>Monterrey</td>
                       <td id="monterreyGrowth"></td>
                     </tr>
                     <tr class='clickable-row' data-href='level2.html?CVE_AREA=21'>
-                      <th scope="row">3</th>
                       <td>Guadalajara</td>
                       <td id="guadalajaraGrowth"></td>
                     </tr>
