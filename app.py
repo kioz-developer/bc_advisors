@@ -160,6 +160,7 @@ def features_by_mun(ent_code, mun_code):
     }
 
 @app.route("/houses_by_mun/<ent_code>/<mun_code>")
+@cross_origin()
 def houses_by_mun(ent_code, mun_code):
     print(f'{ent_code}:{type(ent_code)}')
     print(f'{mun_code}:{type(mun_code)}')
