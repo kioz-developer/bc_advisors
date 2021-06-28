@@ -211,38 +211,31 @@ d3.json(geoData).then(function(data) {
 
   // Houses For Sale Markers
 
-  // d3.csv("static/data/BJCoords.csv").then(function(data) {
+  d3.json("https://flask-bj-forecasting.herokuapp.com/houses_by_mun/" + CVE_ENT + "/" + CVE_MUN).then(function(data) {
 
-  //   let rows = [];
+    let markers = [];
 
-  //   data.forEach(row => {
-  //     rows.push(row);
-  //   });
+    // Number formatter.
+    let formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'MXN',
+    });
 
-  //   let markers = [];
-
-  //   // Number formatter.
-  //   let formatter = new Intl.NumberFormat('en-US', {
-  //   style: 'currency',
-  //   currency: 'MXN',
-  //   });
-
-  //   rows.forEach(row => {
-  //     markers.push(L.marker([row.lat, row.long]).bindPopup(`${row.adress} <br>
-  //                                                           Price: ${formatter.format(row.price)} <br>
-  //                                                           m2: ${row.m2} <br>
-  //                                                           Rooms: ${row.rooms}`));
-  //   });
+    data.forEach(row => {
+      markers.push(L.marker([row.lat, row.lng]).bindPopup(`${row.adress} <br>
+                                                            Price: ${formatter.format(row.price)} <br>
+                                                            m2: ${row.m2} <br>`));
+    });
     
-  //   let forSale = L.layerGroup(markers);
+    let forSale = L.layerGroup(markers);
 
-  //   let overlayMaps = {
-  //     "Houses For Sale": forSale
-  //     };
+    let overlayMaps = {
+      "Houses For Sale": forSale
+      };
 
-  //   L.control.layers(null, overlayMaps).addTo(myMap);
+    L.control.layers(null, overlayMaps).addTo(myMap);
 
-  // });
+  });
 
 });
 

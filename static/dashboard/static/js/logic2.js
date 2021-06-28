@@ -10,8 +10,6 @@ let geojson;
 // // Grab data with d3
 d3.json(geoData).then(function(data) {
 
-  console.log(data);
-
   let lat = data.latitude;
   let long = data.longitude;
 
@@ -33,11 +31,11 @@ d3.json(geoData).then(function(data) {
   // Create a new choropleth layer
   geojson = L.choropleth(data, {
     // Define what  property in the features to use
-    valueProperty: "COLOR",
+    valueProperty: "GROWTH",
     // Set color scale
-    scale: ["#006d2c", "#006d2c"],
+    scale: ["#94001e","#bd0026", "#de2d26", "#c7e9c0", "#31a354", "#006d2c"],
     // Number of breaks in step range
-    steps: 2,
+    steps: 6,
     // q for quartile, e for equidistant, k for k-means
     mode: "q",
     style: {
@@ -63,7 +61,10 @@ d3.json(geoData).then(function(data) {
           window.location.href = "level3.html?CVE_ENT=" + feature.properties.CVE_ENT + "&CVE_MUN=" + feature.properties.CVE_MUN;
           });
 
-      layer.bindPopup(`${feature.properties.NOM_MUN}`)
+      layer.bindPopup(`
+          ${feature.properties.NOM_MUN}<br>
+          Growth: ${Math.round(feature.properties.GROWTH * 100) / 100}%`
+        )
         .on('mouseover', function() {
         this.openPopup();})
         .on('mouseout', function() {
@@ -85,7 +86,7 @@ d3.json(geoData).then(function(data) {
         // by growth
         let object = {
         borough: feat.properties.NOM_MUN,
-        growth: feat.properties.AREA,
+        growth: feat.properties.GROWTH,
         CVE_MUN: feat.properties.CVE_MUN,
         CVE_ENT: feat.properties.CVE_ENT
         };
@@ -103,7 +104,7 @@ d3.json(geoData).then(function(data) {
     .enter()
     .append("tr")
     .html(function(d) {
-      return `<td>${d.borough}</td><td>${d.growth}</td>`;
+      return `<td>${d.borough}</td><td>${Math.round(d.growth * 100) / 100}% </td>`;
     })
     .on('click', function(d) {
       window.location.href = "level3.html?CVE_ENT=" + `${d.CVE_ENT}` + "&CVE_MUN=" + `${d.CVE_MUN}`;

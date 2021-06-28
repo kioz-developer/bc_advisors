@@ -52,6 +52,21 @@ d3.json(geoData).then(function(data) {
     }
 
   }).addTo(myMap);
+
+  let valleyGrowth = 0;
+  let monterreyGrowth = 0;
+  let guadalajaraGrowth = 0;
+
+  d3.select("#valleyGrowth")
+    .append("text")
+    .text(`${valleyGrowth}`);
+  d3.select("#monterreyGrowth")
+    .append("text")
+    .text(`${monterreyGrowth}`);
+  d3.select("#guadalajaraGrowth")
+    .append("text")
+    .text(`${guadalajaraGrowth}`);
+  
 });
 
 // Legend
