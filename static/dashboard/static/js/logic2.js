@@ -74,7 +74,7 @@ d3.json(geoData).then(function(data) {
           window.location.href = "level3.html?CVE_ENT=" + feature.properties.CVE_ENT + "&CVE_MUN=" + feature.properties.CVE_MUN;
           });
 
-      layer.bindPopup(`${feature.properties.NOM_MUN}<br>Growth: ${Math.round(feature.properties.GROWTH * 100) / 100}%`)
+      layer.bindPopup(`${feature.properties.NOM_MUN}<br>Growth in price 2010-2020: ${Math.round(feature.properties.GROWTH * 100) / 100}%`)
         .on('mouseover', function() {
         this.openPopup();})
         .on('mouseout', function() {
