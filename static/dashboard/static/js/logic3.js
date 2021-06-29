@@ -65,7 +65,7 @@ d3.json(geoData).then(function(data) {
       
       // let myString = feature.properties.CVE_AGEB.trim().toLowerCase().replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
 
-      layer.bindPopup(`Growth: ${Math.round(feature.properties.growth * 100) / 100}% <br>`);
+      layer.bindPopup(`Growth in price 2010-2020: ${Math.round(feature.properties.growth * 100) / 100}% <br>`);
     }
     
   }).addTo(myMap);
