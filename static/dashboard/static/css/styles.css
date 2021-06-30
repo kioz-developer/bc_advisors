@@ -18,3 +18,10 @@
     background: white;
     border-radius: 5px;
   }
+
+  .nav-link.active {
+    cursor: pointer;
+  }
+  .cursor_hand {
+    cursor: pointer;
+  }

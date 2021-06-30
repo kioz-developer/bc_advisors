@@ -66,7 +66,7 @@ d3.json(geoData).then(function(data) {
         .append("li")
         .attr("class", "nav-item")
         .append("a")
-        .attr("class", "nav-link active")
+        .attr("class", "nav-link")
         .append("p")
         .append("text")
         .text(`${feature.properties.NOM_MUN}`)
